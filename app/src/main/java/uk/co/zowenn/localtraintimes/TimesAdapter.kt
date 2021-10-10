@@ -17,13 +17,9 @@ class TimesAdapter(val timesList: MutableList<TrainTime>) : RecyclerView.Adapter
 
         fun bind(times: TrainTime){
             destinationTextView.text = times.destination
-            if (times.arrival == "null" ){
-                arrivalTextView.text = ""
-            } else {
-                arrivalTextView.text = "Arriving: "+times.arrival
-            }
-            departureTextView.text = "Departing: "+times.departure
-            platformTextView.text = times.platform
+            arrivalTextView.text = if (times.arrival == "null" ) "" else "Arriving: "+times.arrival
+            departureTextView.text = if (times.departure == "null") "" else "Departing: "+times.departure
+            platformTextView.text = if(times.platform == "null") "" else "Platform: "+times.platform
         }
     }
 
