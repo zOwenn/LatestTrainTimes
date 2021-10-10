@@ -14,9 +14,6 @@ class Request(private val url: String) {
         return formatJson(travelJson)
     }
 
-    // THIS WILL NEED TESTING AGAIN WHEN RECYCLERVIEW IS IMPLEMENTED
-    // - refactoring an even messier function
-
     /* A somewhat messy implementation to parse the data from the TransportAPI data. Ideally, a
     library would have been found to do this cleaner, but this works to parse the data to a format
     desired for the recyclerView */
@@ -26,7 +23,6 @@ class Request(private val url: String) {
         val jsonObject = JSONTokener(response).nextValue() as JSONObject
         val departures = JSONTokener(jsonObject.getString("departures")).nextValue() as JSONObject
         val allDepartures = departures.getJSONArray("all")
-
         // Checking the array contains any departures
         if (allDepartures.length() > 0) {
             for (i in 0 until allDepartures.length()) {
@@ -39,25 +35,18 @@ class Request(private val url: String) {
                     moving onto the aimed arrival time.*/
                 val expectedArrival = getValue(departureJson, "expected_arrival_time")
                 val aimedArrival = departureJson.getString("aimed_arrival_time")
-                when {
-                    expectedArrival != null -> trainTime.arrival = expectedArrival
-                    else -> trainTime.arrival = aimedArrival
-                }
+                trainTime.arrival = expectedArrival ?: aimedArrival
                 /* Handling Departure times, prioritising expected departure in case of delays,
                     but this can be missing in some queries. An error needs to be caught before
                     moving onto the aimed departure time.*/
                 val expectedDeparture = getValue(departureJson, "expected_departure_time")
                 val aimedDeparture = departureJson.getString("aimed_departure_time")
-                when {
-                    expectedDeparture != null -> trainTime.departure = expectedDeparture
-                    else -> trainTime.departure = aimedDeparture
-                }
+                trainTime.departure = expectedDeparture ?: aimedDeparture
                 output.add(trainTime)
             }
         } else {
             // add something for a "no departures found" message
-            output.add( TrainTime("No departures found", "null",
-                "null", "null") )
+            output.add(TrainTime())
         }
         return output
     }
@@ -72,6 +61,6 @@ class Request(private val url: String) {
 
 /*  A simple class to help parse the data collected from the TransportAPI
     While there is more data returned in the request, only this is currently desired to be listed
- */
+    By default returns an empty object */
 class TrainTime(var destination: String="No departures found", var platform: String="null",
                 var arrival: String="null", var departure: String="null")
