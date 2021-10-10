@@ -11,7 +11,7 @@ class Request(private val url: String) {
     // Function to carry out the request, and also parse the data for use in the app
     fun run(): MutableList<TrainTime> {
         val travelJson = URL(url).readText()
-        return mutableListOf<TrainTime>()
+        return formatJson(travelJson)
     }
 
     // THIS WILL NEED TESTING AGAIN WHEN RECYCLERVIEW IS IMPLEMENTED
@@ -41,8 +41,7 @@ class Request(private val url: String) {
                 val aimedArrival = departureJson.getString("aimed_arrival_time")
                 when {
                     expectedArrival != null -> trainTime.arrival = expectedArrival
-                    aimedArrival != null -> trainTime.arrival = aimedArrival
-                    else -> trainTime.arrival = "N/A"
+                    else -> trainTime.arrival = aimedArrival
                 }
                 /* Handling Departure times, prioritising expected departure in case of delays,
                     but this can be missing in some queries. An error needs to be caught before
@@ -51,15 +50,14 @@ class Request(private val url: String) {
                 val aimedDeparture = departureJson.getString("aimed_departure_time")
                 when {
                     expectedDeparture != null -> trainTime.departure = expectedDeparture
-                    aimedDeparture != null -> trainTime.departure = aimedDeparture
-                    else -> trainTime.departure = "N/A"
+                    else -> trainTime.departure = aimedDeparture
                 }
                 output.add(trainTime)
             }
         } else {
             // add something for a "no departures found" message
-            var trainTime = TrainTime("No departures found", "null",
-                "null", "null")
+            output.add( TrainTime("No departures found", "null",
+                "null", "null") )
         }
         return output
     }
@@ -75,4 +73,5 @@ class Request(private val url: String) {
 /*  A simple class to help parse the data collected from the TransportAPI
     While there is more data returned in the request, only this is currently desired to be listed
  */
-class TrainTime(var destination: String="", var platform: String="", var arrival: String="", var departure: String="")
+class TrainTime(var destination: String="No departures found", var platform: String="null",
+                var arrival: String="null", var departure: String="null")
