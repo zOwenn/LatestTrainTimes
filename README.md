@@ -17,7 +17,7 @@ The app uses a RecyclerView to display individual items for each train, as well 
 ## Next Steps
 _What would be focussed on in further development_
 
-Given more time, the overall layout of the app could be adjusted to look better, as well as to be condusive to other additional features. Having an easily accessible navigation bar or menu would allow for additional buttons and details to be added without cluttering the activity.
+Given more time, the overall layout of the app could be adjusted to look better, as well as to be condusive to other additional features. Having an easily accessible navigation bar or menu would allow for additional buttons and details to be added without cluttering the activity. It would also allow for space for a settings button with options that could tailor the app for the user. A main example for settings would be aiming for a more inclusive design, including colour themes that could be chosen, and font size options. 
 
 Other additional features would include those listed on the provided document: 
  - the handling of if the user is offline 
